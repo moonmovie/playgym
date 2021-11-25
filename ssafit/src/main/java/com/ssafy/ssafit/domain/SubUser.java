@@ -17,6 +17,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.ColumnDefault;
+
+import org.hibernate.annotations.ColumnDefault;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,6 +60,14 @@ public class SubUser {
 	@JoinColumn(name = "cid")
 	@OneToOne
 	private GetCt cid;
+	
+	@ColumnDefault("1")
+	@NotNull
+	private int level;
+	
+	@ColumnDefault("100")
+	@NotNull
+	private int max;
 	
 	@OneToMany (mappedBy = "sid", cascade = CascadeType.REMOVE)
 	private List<GetCt> getchracters = new ArrayList<>();

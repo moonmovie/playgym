@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.ssafit.domain.ApiResMessage;
 import com.ssafy.ssafit.domain.Score;
 import com.ssafy.ssafit.dto.SubGameStatusDTO;
+import com.ssafy.ssafit.dto.SubUserInfoDto;
 import com.ssafy.ssafit.dto.logGameDTO;
 import com.ssafy.ssafit.service.GameScoreService;
+import com.ssafy.ssafit.service.GetCpsService;
 import com.ssafy.ssafit.service.SubUserService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class SubUserController {
 //	@Autowired
 	private final SubUserService subUserService;
 	private final GameScoreService gameScoreService;
+	
 	// 서브 계정 추가
 	@PostMapping("/sub/add")
 	public ResponseEntity<ApiResMessage> addSubUser(@RequestBody Map<String, String> subUser){
@@ -142,18 +145,19 @@ public class SubUserController {
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
 	}
 	
-	//서브유저 캐릭터 삭제
-	@DeleteMapping("/sub/delall")
-	public ResponseEntity<ApiResMessage> deleteAllMyCharacter(@RequestBody Map<String, String> input){
-		try {
-			subUserService.deleteAllMyCharacter(input);
-		} catch(Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<ApiResMessage>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
-		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
-	}
+//	//서브유저 캐릭터 삭제
+//	@DeleteMapping("/sub/delall")
+//	public ResponseEntity<ApiResMessage> deleteAllMyCharacter(@RequestBody Map<String, String> input){
+//		try {
+//			subUserService.deleteAllMyCharacter(input);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			return new ResponseEntity<ApiResMessage>(HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//		
+//		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,null,"OK"),HttpStatus.OK);
+//	}
+	
 	@PostMapping("/sub/log")
 	public ResponseEntity<ApiResMessage> saveGamelog(@RequestBody Map<String,Long> map){
 		try {
@@ -193,6 +197,19 @@ public class SubUserController {
 		
 		map.put("subusers",list);
 		return new ResponseEntity<ApiResMessage>(new ApiResMessage(200,map,"OK"),HttpStatus.OK);
+	}
+	
+	//
+	@GetMapping("/sub/info")
+	public ResponseEntity<SubUserInfoDto> getSubUserData(@RequestParam long sid){
+		SubUserInfoDto result = null;
+		try {
+			result = subUserService.getSubUserData(sid);
+		} catch (Exception e) {
+			return new ResponseEntity<SubUserInfoDto>(HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<SubUserInfoDto>(result, HttpStatus.OK);
 	}
 	
 }
